@@ -65,10 +65,11 @@ table(new_heart_data$Target)
 #library(data.table)
 #library(tidyr)
 
-# Analysing the chances of heart-attack with the sex-gender
-table(new_heart_data$Target, new_heart_data$Sex)
-
+# Analyse the Age of the patients
 table(new_heart_data$Age)
+
+# Analysing the chances of heart-attack according to there Ages
+table(new_heart_data$Age, new_heart_data$Target)
 
 # Question 1:
 # Peoples at different ages can get a heart-diseases
@@ -77,6 +78,7 @@ table(new_heart_data$Age)
 
 # Convert the Target variable to
 # a categorical dichotomous variable with appropriate labels
+# 0 = Less chance of getting HA 1 = More chance of getting HA
 new_heart_data$Target <- factor(new_heart_data$Target, 
                                 labels = c("Less chance of getting HA", 
                                            "More chance of getting HA"))
@@ -117,7 +119,7 @@ library("lattice")
 # Visualizing the variables
 histogram(~Age | Target, 
           data = new_heart_data, 
-          main = "Distribution of heart data", 
+          main = "Distribution of age with heart data", 
           xlab = "AGE", ylab = "Count of people getting HA")
 
 # Visual analysis seems to indicate that the 
@@ -185,6 +187,81 @@ wilcox.test(Age~Target)
   #qqline(Age[Target == "Less chance of getting HA"])})
 
 # Question 2:
+# Comparing the ratio of Gender having a chance o get the heart-attack
+# H0 = Males have more chance to get a HA then female
+# H1 = Males do not have more chance of getting a HA then female
+
+# Analyse the gender of the patients
+table(new_heart_data$Sex)
+
+# Analysing the chances of heart-attack with the sex-gender
+table(new_heart_data$Target, new_heart_data$Sex)
+
+# Convert the Sex variable to
+# a categorical dichotomous variable with appropriate labels
+# 0 = Female and 1 = Male
+new_heart_data$Sex <- factor(new_heart_data$Sex, 
+                             labels = c("FeMale", 
+                                        "Male"))
+
+# Structure of the DF
+str(new_heart_data)
+
+# Plot the graph to analyze the specified attributes
+plot(Target, Sex, pch = 9, col = "LightBlue")
+
+# Visualizing the variables
+histogram(~Sex | Target, 
+          data = new_heart_data, 
+          main = "Distribution of the gender with heart data", 
+          xlab = "SEX", ylab = "Count of people getting HA") 
+
+# Visual analysis seems to indicate that the 
+# data is Normally Distributed
+# summarizing it below
+tapply(Sex, Target, median)
+
+# Applying the chi-square statistic with the function
+# it can be applied as both are the categorical variables
+chisq <- chisq.test(new_heart_data$Sex, new_heart_data$Target)
+chisq
+
+# Observed count values for the hypothesis
+chisq$observed
+
+# Expected count of the values for the hypothesis
+round(chisq$expected)
+
+# Visualize the pearsons residuals
+round(chisq$residuals)
+
+# Print the p.value
+chisq$p.value
+
+# cut-off = 0.05
+# p-value < 1.876e-06 equals to (0.022)
+# p-value < 0.05 then we, Reject the H0
+
+# p-value < 0.05 so this indicates that the
+# Null (H0) hypothesis is rejected
+# therefore this indicates that
+# the chance of female patient getting HA is less compared to male
+
+# Answer to Question 2:
+# Thus the chance of male patient getting HA is more with th female.
+
+
+# Question 3:
+# 
+
+
+
+
+
+
+
+
+
 
 
 
