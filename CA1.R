@@ -191,10 +191,10 @@ wilcox.test(Age~Target)
 # H0 = Males have more chance to get a HA then female
 # H1 = Males do not have more chance of getting a HA then female
 
-# Analyse the gender of the patients
+# Analyze the gender of the patients
 table(new_heart_data$Sex)
 
-# Analysing the chances of heart-attack with the sex-gender
+# Analyzing the chances of heart-attack with the sex-gender
 table(new_heart_data$Target, new_heart_data$Sex)
 
 # Convert the Sex variable to
@@ -252,11 +252,89 @@ chisq$p.value
 
 
 # Question 3:
-# 
+# Regular exercise of may reduced to the chest pain and can have less chances of HA
+# H0 = Exercise will reduced the chest pain & less chance of HA
+# H1 = Exercise will not reduced the chest pain & can get HA
 
+# Analyzing the count with different types of chest pain data
+table(new_heart_data$Chest_pain)
 
+# Analyzing the exercise data with the count
+table(new_heart_data$Excercise_angina)
 
+# Analyzing the combination of the exercise and chest pain
+table(new_heart_data$Excercise_angina, new_heart_data$Chest_pain)
 
+# Plot the graph to analyze the specified attributes
+plot(Excercise_angina, Chest_pain, pch = 9, col = "LightBlue")
+
+# Convert the Exercise_Angina variable to
+# a categorical dichotomous variable with appropriate labels
+# 0 = No and 1 = Yes
+new_heart_data$Excercise_angina <- factor(new_heart_data$Excercise_angina, 
+                                          labels = c("No", "Yes"))
+
+# Structure of the DF
+str(new_heart_data)
+
+# Converting the Chest pain variable to a factor &
+# categorizing it to different levels
+new_heart_data$Chest_pain <- as.factor(new_heart_data$Chest_pain)
+
+# Renaming the levels of the Chest Pain as
+# Value 0 = Typical Angina
+# Value 1 = Atypical Angina
+# Value 2 = Non-Anginal Pain
+# Value 3 = Asymptomatic
+levels(new_heart_data$Chest_pain) = c("Typical Angina", 
+                                      "Atypical Angina", 
+                                      "Non-Anginal Pain", 
+                                      "Asymptomatic")
+
+# Analyzing the data after converting it to desired attributes
+table(new_heart_data$Chest_pain)
+table(new_heart_data$Excercise_angina)
+
+# Visualizing the variables
+histogram(~Chest_pain | Excercise_angina, 
+          data = new_heart_data, 
+          main = "Distribution of the Exercise v/s Chest Pain", 
+          xlab = "Chest Pain Type", ylab = "Daily Exercise Result") 
+
+# Visual analysis seems to indicate that the 
+# data is Normally Distributed
+# summarizing it below
+tapply(Chest_pain, Excercise_angina, median)
+
+# Applying the chi-square statistic with the function
+# it can be applied as both are the categorical variables
+chisq <- chisq.test(new_heart_data$Chest_pain, new_heart_data$Excercise_angina)
+chisq
+
+# Observed count values for the hypothesis
+chisq$observed
+
+# Expected count of the values for the hypothesis
+round(chisq$expected)
+
+# Visualize the pearsons residuals
+round(chisq$residuals)
+
+# Print the p.value
+chisq$p.value
+
+# cut-off = 0.05
+# p-value < 1.577331e-14 equals to (0.0016)
+# p-value < 0.05 then we, Reject the H0
+
+# p-value < 0.05 so this indicates that the
+# Null (H0) hypothesis is rejected
+# therefore this indicates that
+# the daily exercise is required to reduce the chest pain and lower the risk of HA
+
+# Answer to Question 3:
+# Thus the chance of getting a high risk of chest pain which may lead to HA
+# is more if daily exercise is not concerned
 
 
 
