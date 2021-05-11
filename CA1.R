@@ -30,6 +30,22 @@ colnames(heart_data)
 # Displaying the summary
 summary(heart_data)
 
+# To check if any data present
+incomplete_data <- heart_data[!complete.cases(heart_data),]
+incomplete_data
+
+# Display the missing data in rows
+nrow(incomplete_data)
+
+# visualize the missing data
+install.packages("VIM")
+library(VIM)
+missing_values <- aggr(heart_data, prop = FALSE, numbers = TRUE)
+
+# Display the summary of missing data
+summary(missing_values)
+# No missing data present in the DF
+
 ############ DO NOT RUN FROM HERE #################
 # Changing the columns values to their corresponding values needed
 # used function (ifelse)
@@ -53,23 +69,25 @@ new_heart_data <- heart_data[, c(1,2,3,4,5,6,7,8,9,12,14)]
 # Display the structure of DF
 str(new_heart_data)
 
-# Displays the chances of people getting a heart-attack &
-# not getting the heart-attack
-table(new_heart_data$Target)
+# Installing the library 'psych'
+install.packages("psych")
+library(psych)
 
-#Imporitng the libraries
-#library(ggplot)
-#library(dplyr)
-#library(caTools)
-#library(gridExtra)
-#library(data.table)
-#library(tidyr)
+pairs.panels(new_heart_data, 
+             smooth = FALSE, # If TRUE, draws loess smooths
+             scale = FALSE, # If TRUE, scales the correlation text font
+             density = TRUE, # If TRUE, adds density plots and histograms
+             ellipses = FALSE, # If TRUE, draws ellipses
+             method = "spearman",# Correlation method (also "pearson" or "kendall")
+             pch = 21, # pch symbol
+             lm = FALSE, # If TRUE, plots linear fit rather than the LOESS (smoothed) fit
+             cor = TRUE, # If TRUE, reports correlations
+             jiggle = FALSE, # If TRUE, data points are jittered
+             factor = 2, # Jittering factor
+             hist.col = 4, # Histograms color
+             stars = TRUE, # If TRUE, adds significance level with stars
+             ci = TRUE) # If TRUE, adds confidence intervals
 
-# Analyse the Age of the patients
-table(new_heart_data$Age)
-
-# Analysing the chances of heart-attack according to there Ages
-table(new_heart_data$Age, new_heart_data$Target)
 
 # Question 1:
 # Peoples at different ages can get a heart-diseases
@@ -86,30 +104,23 @@ new_heart_data$Target <- factor(new_heart_data$Target,
 # Displaying the structure of DF
 str(new_heart_data)
 
-# Installing the library 'psych'
-install.packages("psych")
-library(psych)
+# Displays the value of chance people getting a heart-attack &
+# not getting the heart-attack
+table(new_heart_data$Target)
 
-pairs.panels(new_heart_data, 
-             smooth = TRUE, # If TRUE, draws loess smooths
-             scale = FALSE, # If TRUE, scales the correlation text font
-             density = TRUE, # If TRUE, adds density plots and histograms
-             ellipses = TRUE, # If TRUE, draws ellipses
-             method = "spearman",# Correlation method (also "pearson" or "kendall")
-             pch = 21, # pch symbol
-             lm = FALSE, # If TRUE, plots linear fit rather than the LOESS (smoothed) fit
-             cor = TRUE, # If TRUE, reports correlations
-             jiggle = FALSE, # If TRUE, data points are jittered
-             factor = 2, # Jittering factor
-             hist.col = 4, # Histograms color
-             stars = TRUE, # If TRUE, adds significance level with stars
-             ci = TRUE) # If TRUE, adds confidence intervals
+# Analyse the Age of the patients
+table(new_heart_data$Age)
+
+# Analysing the chances of heart-attack according to there Ages
+table(new_heart_data$Age, new_heart_data$Target)
 
 # Attach the DF with the function
 attach(new_heart_data)
 
 # Plot the graph to analyze the specified attributes
-plot(Target, Age, pch = 9, col = "LightBlue")
+plot(Target, Age, pch = 9, col = "LightBlue", 
+     main = "Comaprison of Target with Age", 
+     xlab = "Target", ylab = "Age (Years)")
 
 # We can split the dichotomous variable into 
 # 2 different visualization & then examine the data
@@ -119,7 +130,7 @@ library("lattice")
 # Visualizing the variables
 histogram(~Age | Target, 
           data = new_heart_data, 
-          main = "Distribution of age with heart data", 
+          main = "Distribution of age with the chance of HA", 
           xlab = "AGE", ylab = "Count of people getting HA")
 
 # Visual analysis seems to indicate that the 
@@ -174,28 +185,12 @@ wilcox.test(Age~Target)
 # Thus the chance of patient getting a HA between the age(29 to 77) is more.
 
 
-# We can add normality line to the plot
-# to help evaluate normality
-#with(new_heart_data, {
- # qqnorm(Age[Target == "More Chance of getting HA"], 
-  #       main = "Heart Disease")
-  #qqline(Age[Target == "More chance of getting HA"])})
-
-#with(new_heart_data, {
- # qqnorm(Age[Target == "Less chance of getting HA"], 
-  #       main = "No Heart Disease")
-  #qqline(Age[Target == "Less chance of getting HA"])})
 
 # Question 2:
 # Comparing the ratio of Gender having a chance o get the heart-attack
 # H0 = Males have more chance to get a HA then female
 # H1 = Males do not have more chance of getting a HA then female
 
-# Analyze the gender of the patients
-table(new_heart_data$Sex)
-
-# Analyzing the chances of heart-attack with the sex-gender
-table(new_heart_data$Target, new_heart_data$Sex)
 
 # Convert the Sex variable to
 # a categorical dichotomous variable with appropriate labels
@@ -207,13 +202,29 @@ new_heart_data$Sex <- factor(new_heart_data$Sex,
 # Structure of the DF
 str(new_heart_data)
 
+# Analyze the gender of the patients
+table(new_heart_data$Sex)
+
+# Analyzing the chances of heart-attack with the sex-gender
+table(new_heart_data$Target, new_heart_data$Sex)
+
 # Plot the graph to analyze the specified attributes
-plot(Target, Sex, pch = 9, col = "LightBlue")
+plot(Target, Sex, pch = 9, col = "LightBlue", 
+     main = "Comaprison of Gender with Target", 
+     xlab = "Target", ylab = "Gender")
+
+# Quantile-Quantile plot (Q-Q-Plot) allows us to check
+# if the data is normally distributed or not
+qqnorm(Sex)
+
+# Add the line to show if data is ND
+qqline(Sex, col = "red")
+# The gender(sex) field is not normally distributed
 
 # Visualizing the variables
 histogram(~Sex | Target, 
           data = new_heart_data, 
-          main = "Distribution of the gender with heart data", 
+          main = "Distribution of the gender with HA", 
           xlab = "SEX", ylab = "Count of people getting HA") 
 
 # Visual analysis seems to indicate that the 
@@ -266,7 +277,9 @@ table(new_heart_data$Excercise_angina)
 table(new_heart_data$Excercise_angina, new_heart_data$Chest_pain)
 
 # Plot the graph to analyze the specified attributes
-plot(Excercise_angina, Chest_pain, pch = 9, col = "LightBlue")
+plot(Excercise_angina, Chest_pain, pch = 9, col = "LightBlue", 
+     main = "Comparison of the exercise data v/s chest pain", 
+     xlab = "Exercise status", ylab = "Chest Pain Type")
 
 # Convert the Exercise_Angina variable to
 # a categorical dichotomous variable with appropriate labels
@@ -291,9 +304,11 @@ levels(new_heart_data$Chest_pain) = c("Typical Angina",
                                       "Non-Anginal Pain", 
                                       "Asymptomatic")
 
+
 # Analyzing the data after converting it to desired attributes
 table(new_heart_data$Chest_pain)
 table(new_heart_data$Excercise_angina)
+
 
 # Visualizing the variables
 histogram(~Chest_pain | Excercise_angina, 
