@@ -46,17 +46,6 @@ missing_values <- aggr(heart_data, prop = FALSE, numbers = TRUE)
 summary(missing_values)
 # No missing data present in the DF
 
-############ DO NOT RUN FROM HERE #################
-# Changing the columns values to their corresponding values needed
-# used function (ifelse)
-heart_data$Sex <- ifelse((heart_data$Sex == 1), 'Male', 'Female')
-heart_data$Excercise_angina <- ifelse((heart_data$Excercise_angina == 1), 'Yes', 'No')
-heart_data$Fasting_BS <- ifelse((heart_data$Fasting_BS == 1), 'True', 'False')
-heart_data$Target <- ifelse((heart_data$Target == 1), 'More chance of heart attack', 'Less chance of heart attack')
-# Display the DF
-head(heart_data)
-############ DO NOT RUN UNTIL HERE ###############
-
 # Checking if any NA is present in the DF
 # FALSE represents no NA's in the DF
 # TRUE represent there are NA's in the DF
@@ -351,12 +340,100 @@ chisq$p.value
 # Thus the chance of getting a high risk of chest pain which may lead to HA
 # is more if daily exercise is not concerned
 
+# Question 4:
+# Cholesterol level can block/damage the blood vessel which can lead to HA
+# the cholesterol levels are correlated with blood arteries
+# H0 = Cholesterol level has an effect on arteries
+# H1 = Cholesterol has no effect on arteries
+
+# Analyze the data with specified attributes
+table(new_heart_data$Num_major_vessel)
+table(new_heart_data$Cholestoral)
+
+# Comparing the analysis of the specified attributes
+table(new_heart_data$Num_major_vessel, new_heart_data$Cholestoral)
+
+# Plot the graph to analyze the specified attributes
+plot(Cholestoral, Num_major_vessel, pch = 9, col = 'lightblue', 
+     main = "Comparison of cholesterol level v/s arteries", 
+     xlab = "Cholesterol level(md/dl)", ylab = "Arteries Blocked")
+
+# Visualizing the variables with the histogram
+histogram(~Cholestoral | Num_major_vessel, 
+          data = new_heart_data, 
+          main = "Distribution of beaver activity data", 
+          xlab = "Cholesterol level(md/dl)", ylab = "Arteries Blocked")
+
+# Quantile-quantile plot (Q-Q-Plot) allows us to check
+# if the data is ND or not
+qqnorm(Cholestoral)
+# Add line that represent the ND
+qqline(Cholestoral, col = "red")
+# Thus the data for Cholesterol is ND
+
+# Quantile-quantile plot (Q-Q-Plot) allows us to check
+# if the data is ND or not
+qqnorm(Num_major_vessel)
+
+# Add line that represent the ND
+qqline(Num_major_vessel, col = "red")
+# The blood vessel data is not ND
 
 
+# Install package and import the library for "ggpubr"
+#install.packages("ggpubr")
+#library("ggpubr")
 
+# Here we will be using the correlation coefficient test
+# Compute the correlation of the required attributes using cor()
+# We can use any of the methods specified below
+cor(new_heart_data$Cholestoral, new_heart_data$Num_major_vessel, 
+    method = c("pearson", "kendall", "spearman"))
 
+# It test for the correlation and returns the value for
+# correlation coefficient and p-value
+# we can use any of the method specified below
+cor.test(new_heart_data$Cholestoral, new_heart_data$Num_major_vessel, 
+         method=c("pearson", "kendall", "spearman"))
 
+# We are using pearson test for hypothesis
+cor(new_heart_data$Cholestoral, new_heart_data$Num_major_vessel,  
+    method = "pearson", use = "complete.obs")
 
+# Checking the test assumption with the Shapiro-Wilk test
+# Shapiro-Wilk normality test for Cholesterol
+shapiro.test(new_heart_data$Cholestoral)
+# p -value = 5.365e-09 = 0.00000002
 
+# Shapiro-Wilk normality test for arteries
+shapiro.test(new_heart_data$Num_major_vessel)
+# p -value = 2.2e-16 = 0.00000003
+
+# Correlation test for the variable
+kendal_test <- cor.test(new_heart_data$Cholestoral, new_heart_data$Num_major_vessel, 
+                method = "kendall")
+kendal_test
+
+# Extract the p.value
+kendal_test$p.value
+# The p-value is = 0.04
+
+# Extract the correlation coefficient
+# The kendall correlation coefficient is (tau)
+kendal_test$estimate
+# tau = 0.088
+
+# cut-off = 0.054
+# p-value = 0.04
+# p-value < 0.05 = Reject H0
+
+# p-value < 0.05 so this indicates the 
+# Null (H0) hypothesis is rejected
+# therefore this indicates that
+# Cholesterol level has no significance effect with the blood arteries
+
+# Answer to Question 4:
+# Thus the cholesterol level affects major arteries & are significantly 
+# correlated with a correlation coefficient.
 
 
