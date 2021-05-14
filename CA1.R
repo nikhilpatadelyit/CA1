@@ -341,6 +341,22 @@ histogram(~Chest_pain | Excercise_angina,
 # summarizing it below
 tapply(Chest_pain, Excercise_angina, median)
 
+# Quantile-Quantile plot (Q-Q-Plot) allows us to check
+# if the data is normally distributed or not
+qqnorm(Chest_pain)
+
+# Add the line to show if data is ND
+qqline(Chest_pain, col = "red")
+# The chest pain variable is not normally distributed
+
+# Quantile-Quantile plot (Q-Q-Plot) allows us to check
+# if the data is normally distributed or not
+qqnorm(Excercise_angina)
+
+# Add the line to show if data is ND
+qqline(Excercise_angina, col = "red")
+# It is not normally distributed
+
 # Applying the chi-square statistic with the function
 # it can be applied as both are the categorical variables
 chisq <- chisq.test(new_heart_data$Chest_pain, new_heart_data$Excercise_angina)
@@ -359,7 +375,7 @@ round(chisq$residuals)
 chisq$p.value
 
 # cut-off = 0.05
-# p-value = 1.577331e-14 equals to (0.00000000015)
+# p-value = 1.577331e-14 equals to (0.0000000000015)
 # p-value < 0.05 then we, Reject the H0
 
 # p-value < 0.05 so this indicates that the
@@ -373,7 +389,7 @@ chisq$p.value
 # less chance of HA
 
 ########### Question 4:
-# Cholesterol level can block/damage the blood vessel which can lead to HA
+# Cholesterol level can block/damage the blood vessel & 
 # the cholesterol levels are correlated with blood arteries
 ########### 
 # H0 = Cholesterol level has an effect on blood arteries
@@ -405,6 +421,9 @@ levels(new_heart_data$Num_major_vessel) = c("No Blocks",
 # Show the vessel levels
 levels(new_heart_data$Num_major_vessel)
 
+# Structure of the DF
+str(new_heart_data)
+
 # Plot the graph to analyze the specified attributes
 plot(Cholestoral, Num_major_vessel, pch = 9, col = 'lightblue', 
      main = "Comparison of cholesterol level v/s arteries", 
@@ -421,7 +440,7 @@ histogram(~Cholestoral | Num_major_vessel,
 qqnorm(Cholestoral)
 # Add line that represent the ND
 qqline(Cholestoral, col = "red")
-# Thus the data for Cholesterol is ND
+# Assuming the data for Cholesterol is ND
 
 # Quantile-quantile plot (Q-Q-Plot) allows us to check
 # if the data is ND or not
@@ -430,6 +449,17 @@ qqnorm(Num_major_vessel)
 # Add line that represent the ND
 qqline(Num_major_vessel, col = "red")
 # The blood vessel data is not ND
+
+# formal test of normality
+# Shapiro-Wilks Test
+# p-value tells us the chances that the sample comes from a ND
+# If p.value > 0.05 then it is normally distributed
+normality_test <- shapiro.test(new_heart_data$Cholestoral)
+normality_test$p.value
+# p.value = 5.364848e-09 = 0.0000002
+# Here p-values tells us the chance that the sample comes from ND
+# We observed that p-value is < than 0.05, 
+# The cholesterol var is not ND
 
 # As we have one continuous and other categorical we will be using
 # Kruskal-Wallis test for the better computation of the data
@@ -454,7 +484,8 @@ pairwise.wilcox.test(new_heart_data$Cholestoral, new_heart_data$Num_major_vessel
 # Cholesterol level has no significance effect with the blood arteries
 
 # Answer to Question 4:
-# Thus the cholesterol level affects major arteries & are significantly different
+# Thus the cholesterol level affects major arteries & 
+# have significance difference between them
 
 # Install package and import the library for "tidyverse"
 # install.packages("tidyverse")
@@ -464,9 +495,15 @@ library(tidyverse)
 # install.packages("ggpubr")
 library(ggpubr)
 
-# Question 5:
+# Installing and importing library "gplots"
+# install.packages("gplots")
+library(gplots)
+
+############### Question 5:
 # Patients sugar level can cause the heart disease which can
 # further lead to cause the heart attack
+# Sugar and heart attack have significance correlation
+###############
 # (fasting blood sugar > 120 mg/dl) (1 = true; 0 = false)
 # H0 = Increase in sugar level can cause heart failure
 # H1 = Increase in sugar level cannot led to heart failure
@@ -478,7 +515,7 @@ table(new_heart_data$Target)
 # Comparing the analysis of the specified attributes
 table(new_heart_data$Fasting_BS, new_heart_data$Target)
 
-# Convert the Exercise_Angina variable to
+# Convert the Fasting_BS variable to
 # a categorical dichotomous variable with appropriate labels
 # (fasting blood sugar > 120 mg/dl) (1 = true; 0 = false)
 new_heart_data$Fasting_BS <- factor(new_heart_data$Fasting_BS, 
@@ -487,14 +524,11 @@ new_heart_data$Fasting_BS <- factor(new_heart_data$Fasting_BS,
 # Structure of the DF after the conversion
 str(new_heart_data)
 
-# Installing and importing library "gplots"
-# install.packages("gplots")
-library(gplots)
-
 # Visualizing the data
-balloonplot(t(Q5), main = "Comparison of the Sugar Level v/s Heart Attack", 
-            xlab = "Sugar Level", ylab = "Target", 
-            label = FALSE, show.margins = FALSE)
+plot(Fasting_BS, Target, pch = 21, col = "LightBlue", 
+     main = "Comparison of the Sugar level v/s Heart Attack", 
+     xlab = "Sugar Level", ylab = "Heart Attack Status")
+
 
 # Analysing the distribution of the variables
 histogram(~Fasting_BS | Target, 
@@ -502,6 +536,18 @@ histogram(~Fasting_BS | Target,
           main = "Distribution of Sugar Level v/s Heart Attack", 
           xlab = "Sugar Level Status(mg/dl)", ylab = "Count of people getting HA") 
 
+# Visual analysis seems to indicate that the 
+# data is Normally Distributed
+# summarizing it below
+tapply(Fasting_BS, Target, median)
+
+# Quantile-Quantile plot (Q-Q-Plot) allows us to check
+# if the data is normally distributed or not
+qqnorm(Fasting_BS)
+
+# Add the line to show if data is ND
+qqline(Fasting_BS, col = "red")
+# The fasting sugar variable is not normally distributed
 
 # Applying the chi-square statistic with the function
 # it can be applied as both are the categorical variables
@@ -515,6 +561,8 @@ chisq$observed
 # Expected count of the values for the hypothesis
 round(chisq$expected)
 
+# Visualize the pearsons residuals
+round(chisq$residuals)
 
 # Print the p.value
 chisq$p.value
@@ -529,11 +577,13 @@ chisq$p.value
 # the increase in sugar level can cause the chances of heart attack
 
 # Answer to Question 5:
-# Thus the chance of getting heart attack is less if the sugar level is not increased
+# Thus the chance of getting heart attack is less 
+# if the sugar level is not increased
 
-# Question 6:
+################# Question 6:
 # Blood pressure level can also cause the heart disease which may
 # lead to heart attack
+#################
 # normal range of BP = 120
 # abnormal range of BP > 120
 # H0 = Rise in blood pressure can cause HA
@@ -547,7 +597,9 @@ table(new_heart_data$Target)
 table(new_heart_data$Resting_BP, new_heart_data$Target)
 
 # Plot the graph to analyze the specified attributes
-plot(Resting_BP, Target, pch = 9, col = "LightBlue")
+plot(Target, Resting_BP, pch = 9, col = "LightBlue", 
+     main = "Comparison of the pressure v/s Heart Attack", 
+     xlab = "Blood Pressure", ylab = "Heart Attack Status")
 
 # Analyzing the distribution of the variables
 histogram(~Resting_BP | Target, 
@@ -561,7 +613,7 @@ qqnorm(Resting_BP)
 
 # Add line that represent the ND
 qqline(Resting_BP, col = "red")
-# It is ND
+# Assume it is ND
 
 # Comparing the two variables
 with(new_heart_data, 
@@ -577,7 +629,8 @@ with(new_heart_data,
 # If p.value > 0.05 then it is normally distributed
 normality_test <- shapiro.test(new_heart_data$Resting_BP)
 normality_test$p.value
-# p.value =1.45e-06 = 0.10
+# p.value =1.45e-06 = 0.00001
+# It is not ND
 
 # This test does not work on a dichotomous variable
 with(new_heart_data, tapply(Resting_BP, Target, shapiro.test))
@@ -603,6 +656,7 @@ wilcox.test(Resting_BP~Target)
 
 # Answer for Question 6:
 # Thus higher the blood pressure high are the chances of getting HA
+# Hence rise is blood pressure can cause HA
 
 
 
