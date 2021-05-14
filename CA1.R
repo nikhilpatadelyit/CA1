@@ -1,4 +1,8 @@
-# Importing the Dataset into a DF
+# Analyzing and dealing with the data of heart-attack
+# to visualize the ratio and chances of people getting
+# heart-attack with the different variables and get them
+# to know the functioning.
+# Importing the dataset into a DF
 heart_data <- read.csv("heart.csv", na="")
 
 # Display the first six entries from the DF
@@ -30,7 +34,7 @@ colnames(heart_data)
 # Displaying the summary
 summary(heart_data)
 
-# To check if any data present
+# To check if any NA data present
 incomplete_data <- heart_data[!complete.cases(heart_data),]
 incomplete_data
 
@@ -38,7 +42,7 @@ incomplete_data
 nrow(incomplete_data)
 
 # visualize the missing data
-install.packages("VIM")
+# install.packages("VIM")
 library(VIM)
 missing_values <- aggr(heart_data, prop = FALSE, numbers = TRUE)
 
@@ -58,12 +62,15 @@ new_heart_data <- heart_data[, c(1,2,3,4,5,6,7,8,9,12,14)]
 # Display the structure of DF
 str(new_heart_data)
 
+# Display the column-names of DF
+colnames(new_heart_data)
+
 # Installing the library 'psych'
-install.packages("psych")
+# install.packages("psych")
 library(psych)
 
 pairs.panels(new_heart_data, 
-             smooth = FALSE, # If TRUE, draws loess smooths
+             smooth = FALSE, # If TRUE, draws less smooths
              scale = FALSE, # If TRUE, scales the correlation text font
              density = TRUE, # If TRUE, adds density plots and histograms
              ellipses = FALSE, # If TRUE, draws ellipses
@@ -71,15 +78,16 @@ pairs.panels(new_heart_data,
              pch = 21, # pch symbol
              lm = FALSE, # If TRUE, plots linear fit rather than the LOESS (smoothed) fit
              cor = TRUE, # If TRUE, reports correlations
-             jiggle = FALSE, # If TRUE, data points are jittered
-             factor = 2, # Jittering factor
+             jiggle = FALSE, # If TRUE, data points are jitered
+             factor = 2, # Jitering factor
              hist.col = 4, # Histograms color
              stars = TRUE, # If TRUE, adds significance level with stars
              ci = TRUE) # If TRUE, adds confidence intervals
 
 
-# Question 1:
+############# Question 1:
 # Peoples at different ages can get a heart-diseases
+############# 
 # H0 = More chance of getting a heart-disease between the age(29 to 77)
 # H1 = Less chance of getting a heart-disease between the age(29 to 77)
 
@@ -133,6 +141,16 @@ qqnorm(Age)
 
 # Add a line that represents the ND
 qqline(Age, col = "red")
+# Assuming that AGE variable is ND
+
+# Visualizing the Q-Q-Plot for ND variable
+with(new_heart_data,
+     {qqnorm(Age, 
+             main ="Normal Q-Q-Plot of Age", 
+             xlab = "Theoritical Quantities", 
+             ylab = "Sample Quantities")
+             qqline(Age)
+     })
 
 # Comparing the two variables
 with(new_heart_data, 
@@ -149,6 +167,9 @@ with(new_heart_data,
 normality_test <- shapiro.test(new_heart_data$Age)
 normality_test$p.value
 # p.value = 0.00579
+# Here p-values tells us the chance that the sample comes from ND
+# We observed that p-value is < than 0.05, 
+# The AGE var is not ND
 
 # This test does not work on a dichotomous variable
 with(new_heart_data, tapply(Age, Target, shapiro.test))
@@ -163,25 +184,25 @@ with(new_heart_data, tapply(Age, Target, shapiro.test))
 # Format wilcox.test(dependent var ~ independent var)
 wilcox.test(Age~Target)
 # cut-off = 0.05
-# p-value < 3.439e-05 equals to (0.002)
+# p-value = 3.439e-05 equals to (0.00003)
 # p-value < 0.05 then we, Reject the H0
 
 # p-value < 0.05 so this indicates that the
 # Null (H0) hypothesis is rejected
 # therefore this indicates that
-# the chance of patient getting HA between the age(29 to 77) is less
+# the chance of patient getting HA between the 
+# age(29 to 77) is less
 
 # Answer for Question 1:
 # Thus the chance of patient getting a HA 
 # between the age(29 to 77) is more.
 
 
-
-# Question 2:
+############## Question 2:
 # Comparing the ratio of Gender having a chance o get the heart-attack
+############## 
 # H0 = Males have more chance to get a HA then female
 # H1 = Males do not have more chance of getting a HA then female
-
 
 # Convert the Sex variable to
 # a categorical dichotomous variable with appropriate labels
@@ -204,6 +225,12 @@ plot(Target, Sex, pch = 9, col = "LightBlue",
      main = "Comaprison of Gender with Target", 
      xlab = "Target", ylab = "Gender")
 
+# Visualizing the variables
+histogram(~Sex | Target, 
+          data = new_heart_data, 
+          main = "Distribution of the gender with HA", 
+          xlab = "SEX", ylab = "Count of people getting HA") 
+
 # Quantile-Quantile plot (Q-Q-Plot) allows us to check
 # if the data is normally distributed or not
 qqnorm(Sex)
@@ -211,12 +238,6 @@ qqnorm(Sex)
 # Add the line to show if data is ND
 qqline(Sex, col = "red")
 # The gender(sex) field is not normally distributed
-
-# Visualizing the variables
-histogram(~Sex | Target, 
-          data = new_heart_data, 
-          main = "Distribution of the gender with HA", 
-          xlab = "SEX", ylab = "Count of people getting HA") 
 
 # Visual analysis seems to indicate that the 
 # data is Normally Distributed
@@ -241,23 +262,25 @@ round(chisq$residuals)
 chisq$p.value
 
 # cut-off = 0.05
-# p-value < 1.876e-06 equals to (0.022)
+# p-value = 1.876e-06 equals to (0.00018)
 # p-value < 0.05 then we, Reject the H0
 
 # p-value < 0.05 so this indicates that the
 # Null (H0) hypothesis is rejected
 # therefore this indicates that
-# the chance of male patient getting HA is less compared to female
+# the chance of males getting HA is less as compared to female
 
 # Answer to Question 2:
-# Thus the chance of male patient getting HA is more then with female.
+# Thus the chance of male patient getting HA 
+# is more then with female.
 
 
-# Question 3:
-# Regular exercise of may reduced to the chest pain and 
+########### Question 3:
+# Regular exercise of may reduced chest pain and 
 # can have less chances of HA
-# H0 = Exercise will reduced the chest pain & less chance of HA
-# H1 = Exercise will not reduced the chest pain & can get HA
+########### 
+# H0 = Exercise will reduced the chest pain
+# H1 = Exercise will not reduced the chest pain
 
 # Analyzing the count with different types of chest pain data
 table(new_heart_data$Chest_pain)
@@ -297,10 +320,15 @@ levels(new_heart_data$Chest_pain) = c("Typical Angina",
                                       "Asymptomatic")
 
 
+# Structure of the DF
+str(new_heart_data)
+
 # Analyzing the data after converting it to desired attributes
 table(new_heart_data$Chest_pain)
 table(new_heart_data$Excercise_angina)
 
+# Analyzing the combination of the exercise and chest pain
+table(new_heart_data$Excercise_angina, new_heart_data$Chest_pain)
 
 # Visualizing the variables
 histogram(~Chest_pain | Excercise_angina, 
@@ -331,7 +359,7 @@ round(chisq$residuals)
 chisq$p.value
 
 # cut-off = 0.05
-# p-value < 1.577331e-14 equals to (0.0016)
+# p-value = 1.577331e-14 equals to (0.00000000015)
 # p-value < 0.05 then we, Reject the H0
 
 # p-value < 0.05 so this indicates that the
@@ -341,12 +369,13 @@ chisq$p.value
 # higher the chance of HA
 
 # Answer to Question 3:
-# Thus the daily exercise will reduced the chest pain and
+# Thus the exercise will reduced the chest pain and
 # less chance of HA
 
-# Question 4:
+########### Question 4:
 # Cholesterol level can block/damage the blood vessel which can lead to HA
 # the cholesterol levels are correlated with blood arteries
+########### 
 # H0 = Cholesterol level has an effect on blood arteries
 # H1 = Cholesterol level has no effect on blood arteries
 
