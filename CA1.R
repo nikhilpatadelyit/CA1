@@ -1,7 +1,9 @@
-# Analyzing and dealing with the data of heart-attack
-# to visualize the ratio and chances of people getting
-# heart-attack with the different variables and get them
-# to know the functioning.
+# Analyzing and dealing with the data related to the "HEART"
+# for visualizing different variables related to functioning & working 
+# of the patients heart and get them analyzed & awareness of their "HEART"
+
+# Importing & Installing the required packages & libraries
+
 # Importing the dataset into a DF
 heart_data <- read.csv("heart.csv", na="")
 
@@ -88,8 +90,8 @@ pairs.panels(new_heart_data,
 ############# Question 1:
 # Peoples at different ages can get a heart-diseases
 ############# 
-# H0 = More chance of getting a heart-disease between the age(29 to 77)
-# H1 = Less chance of getting a heart-disease between the age(29 to 77)
+# H0 = More chance of getting a heart-attack between the age(29 to 77)
+# H1 = Less chance of getting a heart-attack between the age(29 to 77)
 
 # Convert the Target variable to
 # a categorical dichotomous variable with appropriate labels
@@ -156,7 +158,7 @@ with(new_heart_data,
 with(new_heart_data, 
      qqplot(Age[Target == "More chance of getting HA"], 
             Age[Target == "Less chance of getting HA"], 
-            main = "Comparing 2 samples of Target Heart Data", 
+            main = "Comparing 2 samples of Heart Data", 
             xlab = "Age Target = More chance", 
             ylab = "Age Target = Less chance"))
 
@@ -175,8 +177,8 @@ normality_test$p.value
 with(new_heart_data, tapply(Age, Target, shapiro.test))
 
 # Results show
-# Less chance of getting HA = p-value = 0.002 - ND
-# More chance of getting HA = p-value = 0.121 - ND
+# Less chance of getting HA = p-value = 0.002 - It is not ND
+# More chance of getting HA = p-value = 0.121 - It is ND
 
 # After consulting the chart, I am aiming
 # a dependent var(Age)
@@ -184,7 +186,7 @@ with(new_heart_data, tapply(Age, Target, shapiro.test))
 # Format wilcox.test(dependent var ~ independent var)
 wilcox.test(Age~Target)
 # cut-off = 0.05
-# p-value = 3.439e-05 equals to (0.00003)
+# p-value = 3.439e-05 equals to (0.0003)
 # p-value < 0.05 then we, Reject the H0
 
 # p-value < 0.05 so this indicates that the
@@ -199,7 +201,7 @@ wilcox.test(Age~Target)
 
 
 ############## Question 2:
-# Comparing the ratio of Gender having a chance o get the heart-attack
+# Comparing the ratio of Gender having a chance to get the heart-attack
 ############## 
 # H0 = Males have more chance to get a HA then female
 # H1 = Males do not have more chance of getting a HA then female
@@ -262,7 +264,7 @@ round(chisq$residuals)
 chisq$p.value
 
 # cut-off = 0.05
-# p-value = 1.876e-06 equals to (0.00018)
+# p-value = 1.876e-06 equals to (0.0018)
 # p-value < 0.05 then we, Reject the H0
 
 # p-value < 0.05 so this indicates that the
@@ -375,7 +377,7 @@ round(chisq$residuals)
 chisq$p.value
 
 # cut-off = 0.05
-# p-value = 1.577331e-14 equals to (0.0000000000015)
+# p-value = 1.577331e-14 equals to (0.00000000015)
 # p-value < 0.05 then we, Reject the H0
 
 # p-value < 0.05 so this indicates that the
@@ -427,13 +429,13 @@ str(new_heart_data)
 # Plot the graph to analyze the specified attributes
 plot(Cholestoral, Num_major_vessel, pch = 9, col = 'lightblue', 
      main = "Comparison of cholesterol level v/s arteries", 
-     xlab = "Cholesterol level(md/dl)", ylab = "Arteries Blocked")
+     xlab = "Cholesterol level(mg/dl)", ylab = "Arteries Blocked")
 
 # Visualizing the variables with the histogram
 histogram(~Cholestoral | Num_major_vessel, 
           data = new_heart_data, 
-          main = "Distribution of beaver activity data", 
-          xlab = "Cholesterol level(md/dl)", ylab = "Arteries Blocked")
+          main = "Distribution of cholesterol v/s arteries", 
+          xlab = "Cholesterol level(mg/dl)", ylab = "Arteries Blocked")
 
 # Quantile-quantile plot (Q-Q-Plot) allows us to check
 # if the data is ND or not
@@ -456,7 +458,7 @@ qqline(Num_major_vessel, col = "red")
 # If p.value > 0.05 then it is normally distributed
 normality_test <- shapiro.test(new_heart_data$Cholestoral)
 normality_test$p.value
-# p.value = 5.364848e-09 = 0.0000002
+# p.value = 5.364848e-09 = 0.0000005
 # Here p-values tells us the chance that the sample comes from ND
 # We observed that p-value is < than 0.05, 
 # The cholesterol var is not ND
@@ -619,7 +621,7 @@ qqline(Resting_BP, col = "red")
 with(new_heart_data, 
      qqplot(Resting_BP[Target == "More chance of getting HA"], 
             Resting_BP[Target == "Less chance of getting HA"], 
-            main = "Comparing 2 samples of Target Heart Data", 
+            main = "Comparing 2 samples of Heart Data", 
             xlab = "High Pressure Target = More chance of HA", 
             ylab = "Low Pressure Target = Less chance of HA"))
 
@@ -636,8 +638,8 @@ normality_test$p.value
 with(new_heart_data, tapply(Resting_BP, Target, shapiro.test))
 
 # Results show
-# Less chance of HA with low pressure = p-value = 0.00002 - then it is ND
-# More chance of HA with high pressure = p-value = 0.011 - then it is ND
+# Less chance of HA with low pressure = p-value = 0.000008 - it is not ND
+# More chance of HA with high pressure = p-value = 0.011 - it is not ND
 
 # After consulting the chart, I am aiming
 # for a dependent var(Blood Pressure)
@@ -658,5 +660,94 @@ wilcox.test(Resting_BP~Target)
 # Thus higher the blood pressure high are the chances of getting HA
 # Hence rise is blood pressure can cause HA
 
+########### Question 7:
+# Blood pressure levels will cause the changes with respect to
+# heart rate in patients
+# Do blood pressure have an affect on heart rate
+###########
+
+#H0: Does blood pressure affects heart rate
+#H1: Does blood pressure not affects heart rate
+
+# Plot the graph to analyze the specified attributes
+plot(Resting_BP, Max_heartrate, pch = 19, col ="lightblue", 
+     main = "Comaprison of blood pressure with heart rate", 
+     xlab = "Blood Pressure (mm Hg)", ylab = "Heart Rate")
+
+
+# Visualizing the variables separately using hist function
+# for blood pressure
+hist(Resting_BP, col = "red", main = "Distributation of blood pressure", 
+     xlab = "Blood Pressure (mm Hg)")
+# for heart rate
+hist(Max_heartrate, col = "red", main = "Distribution of heart rate", 
+     xlab = "Heart Rate")
+
+# Visual analysis of the data
+histogram(~Resting_BP | Max_heartrate,
+          data = cars,
+          main = "Distributation of blood pressure v/s heart rate",
+          xlab = "Blood Pressure (mm Hg)" ,ylab = "Heart Rate")
+
+# Quantile-quantile plot (Q-Q-Plot) allows us to check
+# if the data is ND or not
+# Adding the line that represent the ND of data using
+# function qqplot() & qqline()
+with(new_heart_data,
+     {qqnorm(Resting_BP, 
+             main ="Normal Q-Q-Plot of blood pressure", 
+             xlab = "Theoretical Quantiles", 
+             ylab = "Sample Quantiles")
+             qqline(Resting_BP)
+     })
+
+with(cars,
+     {qqnorm(Max_heartrate, 
+             main ="Normal Q-Q-Plot of heart rate", 
+             xlab = "Theoretical Quantiles", 
+             ylab = "Sample Quantiles")
+             qqline(Max_heartrate)
+     })
+
+# Examine the linear correlation between both vars
+with(new_heart_data, qqplot(Resting_BP, Max_heartrate))
+
+# Testing the linearity of the variables
+# We can run the formal test of normality provided through 
+# the widely used shapiro-wilks test
+normality_test <- shapiro.test(new_heart_data$Resting_BP)
+normality_test$p.value
+# For this variable p-value = 0.000014
+
+normality_test <- shapiro.test(new_heart_data$Max_heartrate)
+normality_test$p.value
+# For this variable p-value = 0.000014
+
+# p-values tells us the chance that the sample comes from ND
+# If p-value < 0.05 then the variable is not ND
+# If p-value < 0.05 then the variable is ND
+shapiro.test(new_heart_data$Resting_BP)
+# 0.00014 < 0.05
+# Then resting_bs is not ND
+shapiro.test(new_heart_data$Max_heartrate)
+# 0.00066 < 0.05
+# Then Max_Heart_Rate is not ND
+
+# If both the variables are not ND 
+# will use "spearman" correlation method test
+# dependent var = Heart Rate
+# independent var = Resting Blood Pressure
+cor.test(Resting_BP, Max_heartrate, 
+         method = "spearman")
+# Spearman correlation = -0.04
+# p-value = 0.48
+# cut-off = 0.05
+# Thus p-value > 0.05
+# we will Accept (H0)
+# Thus there is no significant correlation between
+# blood pressure and heart rate
+
+# Answer to question 7:
+# Thus we can state that blood pressure does not affects heart rate
 
 
