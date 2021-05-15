@@ -61,6 +61,9 @@ any(is.na(heart_data))
 # storing them to a new DF
 new_heart_data <- heart_data[, c(1,2,3,4,5,6,7,8,9,12,14)]
 
+# Checking if any NA is present in the DF
+any(is.na(new_heart_data))
+
 # Display the structure of DF
 str(new_heart_data)
 
@@ -88,7 +91,7 @@ pairs.panels(new_heart_data,
 
 
 ############# Question 1:
-# Peoples at different ages can get a heart-diseases
+# Peoples at different ages can get a heart-attack
 ############# 
 # H0 = More chance of getting a heart-attack between the age(29 to 77)
 # H1 = Less chance of getting a heart-attack between the age(29 to 77)
@@ -118,7 +121,7 @@ attach(new_heart_data)
 
 # Plot the graph to analyze the specified attributes
 plot(Target, Age, pch = 9, col = "LightBlue", 
-     main = "Comaprison of Target with Age", 
+     main = "Comparison of Target with Age", 
      xlab = "Target", ylab = "Age (Years)")
 
 # We can split the dichotomous variable into 
@@ -180,11 +183,14 @@ with(new_heart_data, tapply(Age, Target, shapiro.test))
 # Less chance of getting HA = p-value = 0.002 - It is not ND
 # More chance of getting HA = p-value = 0.121 - It is ND
 
-# After consulting the chart, I am aiming
-# a dependent var(Age)
-# with a independent categorical var(Target)
 # Format wilcox.test(dependent var ~ independent var)
 wilcox.test(Age~Target)
+# It is not suitable with this type of data we have
+
+# As we dont have any dependent or independent variable 
+# we can use Kruskal-Test if we have one data as continous and 
+# other as categorical data 
+kruskal.test(Age ~ Target, data = new_heart_data)
 # cut-off = 0.05
 # p-value = 3.439e-05 equals to (0.0003)
 # p-value < 0.05 then we, Reject the H0
@@ -264,7 +270,7 @@ round(chisq$residuals)
 chisq$p.value
 
 # cut-off = 0.05
-# p-value = 1.876e-06 equals to (0.0018)
+# p-value = 1.876e-06 equals to (0.00018)
 # p-value < 0.05 then we, Reject the H0
 
 # p-value < 0.05 so this indicates that the
@@ -469,7 +475,7 @@ kruskal.test(Cholestoral ~ Num_major_vessel, data = new_heart_data)
 # p-value = 0.04
 
 # function pairwise.wilcox.test() to calculate pairwise comparisons between
-# arteries levels
+# arteries and cholesterol levels
 pairwise.wilcox.test(new_heart_data$Cholestoral, new_heart_data$Num_major_vessel, 
                      p.adjust.method = "BH")
 
@@ -641,13 +647,15 @@ with(new_heart_data, tapply(Resting_BP, Target, shapiro.test))
 # Less chance of HA with low pressure = p-value = 0.000008 - it is not ND
 # More chance of HA with high pressure = p-value = 0.011 - it is not ND
 
-# After consulting the chart, I am aiming
-# for a dependent var(Blood Pressure)
-# with a independent categorical var(Target)
 # Format for the test is: wilcox.test(dependent var ~ independent var)
 wilcox.test(Resting_BP~Target)
 # p-value = 0.03
 
+# As we dont have any dependent or independent variable 
+# we can use Kruskal-Test if we have one data as continous and 
+# other as categorical data 
+kruskal.test(Resting_BP ~ Target, data = new_heart_data)
+# p-value = 0.03
 # cut-off = 0.05
 # p-value < 0.05 then we, Reject the H0
 
@@ -752,4 +760,3 @@ cor.test(Resting_BP, Max_heartrate,
 
 # Saving the modified file of the data worked on
 write.csv(new_heart_data, file = "new_heart_data.csv")
-
