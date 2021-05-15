@@ -1,6 +1,6 @@
 # Analyzing and dealing with the data related to the "HEART"
 # for visualizing different variables related to functioning & working 
-# of the patients heart and get them analyzed & awareness of their "HEART"
+# of the patients heart and get them analyzed about the "HEART"
 
 # Importing & Installing the required packages & libraries
 
