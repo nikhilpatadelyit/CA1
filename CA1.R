@@ -183,12 +183,6 @@ with(new_heart_data, tapply(Age, Target, shapiro.test))
 # Less chance of getting HA = p-value = 0.002 - It is not ND
 # More chance of getting HA = p-value = 0.121 - It is ND
 
-# Target - dependent var
-# Age  - indepenedent var
-# Format wilcox.test(dependent var ~ independent var)
-wilcox.test(Target~Age)
-# It is not suitable with this type of data we have
-
 # As we havent decide any dependent or independent variable 
 # we can use Kruskal-Test if we have one data as continous and 
 # other as categorical data 
