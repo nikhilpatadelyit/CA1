@@ -183,11 +183,13 @@ with(new_heart_data, tapply(Age, Target, shapiro.test))
 # Less chance of getting HA = p-value = 0.002 - It is not ND
 # More chance of getting HA = p-value = 0.121 - It is ND
 
+# Target - dependent var
+# Age  - indepenedent var
 # Format wilcox.test(dependent var ~ independent var)
-wilcox.test(Age~Target)
+wilcox.test(Target~Age)
 # It is not suitable with this type of data we have
 
-# As we dont have any dependent or independent variable 
+# As we havent decide any dependent or independent variable 
 # we can use Kruskal-Test if we have one data as continous and 
 # other as categorical data 
 kruskal.test(Age ~ Target, data = new_heart_data)
@@ -655,11 +657,7 @@ with(new_heart_data, tapply(Resting_BP, Target, shapiro.test))
 # Less chance of HA with low pressure = p-value = 0.000008 - it is not ND
 # More chance of HA with high pressure = p-value = 0.011 - it is not ND
 
-# Format for the test is: wilcox.test(dependent var ~ independent var)
-wilcox.test(Resting_BP~Target)
-# p-value = 0.03
-
-# As we dont have any dependent or independent variable 
+# As we dont have any dependent or independent variable specified
 # we can use Kruskal-Test if we have one data as continous and 
 # other as categorical data 
 kruskal.test(Resting_BP ~ Target, data = new_heart_data)
@@ -744,7 +742,7 @@ normality_test$p.value
 
 normality_test <- shapiro.test(new_heart_data$Max_heartrate)
 normality_test$p.value
-# For this variable p-value = 0.000014
+# For this variable p-value = 0.00066
 
 # p-values tells us the chance that the sample comes from ND
 # If p-value < 0.05 then the variable is not ND
@@ -775,4 +773,3 @@ cor.test(Resting_BP, Max_heartrate,
 
 # Saving the modified file of the data worked on
 write.csv(new_heart_data, file = "new_heart_data.csv")
-
