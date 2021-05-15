@@ -11,7 +11,9 @@ develop at the site of the rupture. The clot may block the supply of blood to th
 triggering a heart attack.
 
 #The dataset is constructed of the following variables.
+
 #Age : Age of the patient
+
 #Sex : Sex of the patient
 #exang: exercise induced angina (1 = yes; 0 = no)
 #ca: number of major vessels (0-3)
