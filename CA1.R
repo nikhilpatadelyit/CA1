@@ -750,4 +750,6 @@ cor.test(Resting_BP, Max_heartrate,
 # Answer to question 7:
 # Thus we can state that blood pressure does not affects heart rate
 
+# Saving the modified file of the data worked on
+write.csv(new_heart_data, file = "new_heart_data.csv")
 
