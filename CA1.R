@@ -191,6 +191,14 @@ wilcox.test(Age~Target)
 # we can use Kruskal-Test if we have one data as continous and 
 # other as categorical data 
 kruskal.test(Age ~ Target, data = new_heart_data)
+
+# function pairwise.wilcox.test() to calculate pairwise comparisons between
+# Age and Target
+pairwise.wilcox.test(new_heart_data$Age, new_heart_data$Target, 
+                     p.adjust.method = "BH")
+
+# The pairwise comparison shows that the levels are significantly different
+
 # cut-off = 0.05
 # p-value = 3.439e-05 equals to (0.0003)
 # p-value < 0.05 then we, Reject the H0
@@ -655,6 +663,13 @@ wilcox.test(Resting_BP~Target)
 # we can use Kruskal-Test if we have one data as continous and 
 # other as categorical data 
 kruskal.test(Resting_BP ~ Target, data = new_heart_data)
+
+# function pairwise.wilcox.test() to calculate pairwise comparisons between
+# Pressure level and Target
+pairwise.wilcox.test(new_heart_data$Resting_BP, new_heart_data$Target, 
+                     p.adjust.method = "BH")
+
+# The pairwise comparison shows that the levels are significantly different
 # p-value = 0.03
 # cut-off = 0.05
 # p-value < 0.05 then we, Reject the H0
@@ -760,3 +775,4 @@ cor.test(Resting_BP, Max_heartrate,
 
 # Saving the modified file of the data worked on
 write.csv(new_heart_data, file = "new_heart_data.csv")
+
